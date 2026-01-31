@@ -22,7 +22,7 @@ export const products = [
       stars: 4,
       count: 127
     },
-    priceCents: 2095,
+    priceCents: 1090,
     keywords: [
       "sports",
       "basketballs"

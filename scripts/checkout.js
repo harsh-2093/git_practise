@@ -5,7 +5,21 @@ import { formatCurrency } from "./utils/money.js";
 let cartSummaryHTML='';
 
 
+export function updateCartQuantity(){
+  let quantity = 0;
+  cart.forEach(cartItem => {
+    quantity += cartItem.quantity;
+  });
+
+  document.querySelector('.js-checkout-update').innerHTML = `
+    Checkout (<a class="return-to-home-link"
+    href="amazon.html">${quantity}</a>)
+  `;
+}
+updateCartQuantity();
+
 cart.forEach((cartItem)=>{
+  
   const productId=cartItem.productId;
   let matchingProduct;
   products.forEach((product)=>{
@@ -13,6 +27,7 @@ cart.forEach((cartItem)=>{
       matchingProduct=product;
     }
   });
+  
 
 
 
@@ -37,8 +52,9 @@ cart.forEach((cartItem)=>{
             <span>
               Quantity: <span class="quantity-label">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
-              Update
+            <span class="update-quantity-link link-primary "
+            data-product-id="${matchingProduct.id}">
+              Update 
             </span>
             <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
               Delete
@@ -95,6 +111,7 @@ cart.forEach((cartItem)=>{
   `;
 });
 
+
 document.querySelector('.js-order-summary').innerHTML=cartSummaryHTML;
 
 
@@ -103,6 +120,7 @@ document.querySelectorAll('.js-delete-link')
   link.addEventListener('click',()=>{
     const productId=link.dataset.productId;
     removeFromCart(productId);
+    updateCartQuantity();
 
     const conatiner=document.querySelector(`.js-cart-item-container-${productId}`);
 
@@ -110,3 +128,25 @@ document.querySelectorAll('.js-delete-link')
     
   });
 });
+
+document.querySelectorAll('.update-quantity-link')
+.forEach((link)=>{
+  link.addEventListener('click',()=>{
+    
+    link.innerHTML=`<input id=${link.dataset.productId} class="quantity-input">
+              <span class="save-quantity-link" data-product-id="${link.dataset.productId}">Save</span>`;
+    
+
+    const savebtn =link.querySelector('.save-quantity-link');
+  savebtn.addEventListener('click',()=>{
+    const container = savebtn.parentElement;
+    const inputValue=container.querySelector('.quantity-input').value;
+    console.log(inputValue);
+  });
+  });
+  
+  
+
+});
+
+
